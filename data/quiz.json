@@ -1,0 +1,252 @@
+[
+  {
+    "question": "Siapa presiden pertama Indonesia?",
+    "options": ["Soeharto", "Soekarno", "BJ Habibie", "Megawati"],
+    "answer": 1
+  },
+  {
+    "question": "2 + 2 = ?",
+    "options": ["3", "4", "5", "6"],
+    "answer": 1
+  },
+  {
+    "question": "Ibukota Jepang adalah?",
+    "options": ["Osaka", "Kyoto", "Tokyo", "Nagoya"],
+    "answer": 2
+  },
+  {
+    "question": "Planet terbesar di tata surya adalah?",
+    "options": ["Mars", "Saturnus", "Jupiter", "Venus"],
+    "answer": 2
+  },
+  {
+    "question": "Warna bendera Indonesia adalah?",
+    "options": ["Merah Putih", "Merah Biru", "Putih Hijau", "Merah Kuning"],
+    "answer": 0
+  },
+  {
+    "question": "Siapa penemu lampu pijar?",
+    "options": ["Albert Einstein", "Isaac Newton", "Thomas Edison", "Nikola Tesla"],
+    "answer": 2
+  },
+  {
+    "question": "Hewan tercepat di darat adalah?",
+    "options": ["Kuda", "Cheetah", "Singa", "Serigala"],
+    "answer": 1
+  },
+  {
+    "question": "Berapa jumlah hari dalam satu minggu?",
+    "options": ["5", "6", "7", "8"],
+    "answer": 2
+  },
+  {
+    "question": "Gunung tertinggi di dunia adalah?",
+    "options": ["Kilimanjaro", "Everest", "Fuji", "Semeru"],
+    "answer": 1
+  },
+  {
+    "question": "Bahasa resmi Brasil adalah?",
+    "options": ["Spanyol", "Inggris", "Prancis", "Portugis"],
+    "answer": 3
+  },
+  {
+    "question": "Mata uang Jepang adalah?",
+    "options": ["Won", "Yuan", "Yen", "Ringgit"],
+    "answer": 2
+  },
+  {
+    "question": "Berapa jumlah pemain sepak bola dalam satu tim di lapangan?",
+    "options": ["9", "10", "11", "12"],
+    "answer": 2
+  },
+  {
+    "question": "Planet Merah adalah?",
+    "options": ["Venus", "Mars", "Jupiter", "Merkurius"],
+    "answer": 1
+  },
+  {
+    "question": "Berapa hasil dari 12 × 8?",
+    "options": ["84", "96", "108", "88"],
+    "answer": 1
+  },
+  {
+    "question": "Ibu kota Korea Selatan adalah?",
+    "options": ["Busan", "Seoul", "Daegu", "Incheon"],
+    "answer": 1
+  },
+  {
+    "question": "Hewan yang terkenal membawa bayi di kantongnya adalah?",
+    "options": ["Koala", "Kanguru", "Beruang", "Panda"],
+    "answer": 1
+  },
+  {
+    "question": "Berapakah jumlah bulan dalam satu tahun?",
+    "options": ["10", "11", "12", "13"],
+    "answer": 2
+  },
+  {
+    "question": "Es batu terbuat dari?",
+    "options": ["Susu", "Air", "Minyak", "Gula"],
+    "answer": 1
+  },
+  {
+    "question": "Apa warna daun pada umumnya?",
+    "options": ["Merah", "Hijau", "Biru", "Hitam"],
+    "answer": 1
+  },
+  {
+    "question": "Hewan yang berbunyi 'meong' adalah?",
+    "options": ["Anjing", "Kucing", "Ayam", "Kambing"],
+    "answer": 1
+  },
+  {
+    "question": "Tebak-tebakan: Semakin diisi semakin ringan. Apa itu?",
+    "options": ["Balon", "Tas", "Botol", "Ember"],
+    "answer": 0
+  },
+  {
+    "question": "Tebak-tebakan: Apa yang punya gigi tapi tidak bisa makan?",
+    "options": ["Sisir", "Hiu", "Kucing", "Garpu"],
+    "answer": 0
+  },
+  {
+    "question": "Tebak-tebakan: Apa yang naik tapi tidak pernah turun?",
+    "options": ["Tangga", "Umur", "Balon", "Pesawat"],
+    "answer": 1
+  },
+  {
+    "question": "Tebak-tebakan: Ayam apa yang paling besar?",
+    "options": ["Ayam Bangkok", "Ayam Geprek", "Ayam Semesta", "Ayam Induk"],
+    "answer": 2
+  },
+  {
+    "question": "Buah yang identik dengan warna kuning adalah?",
+    "options": ["Apel", "Pisang", "Anggur", "Semangka"],
+    "answer": 1
+  },
+  {
+    "question": "Jika hari ini Senin, dua hari lagi adalah?",
+    "options": ["Selasa", "Rabu", "Kamis", "Jumat"],
+    "answer": 1
+  },
+  {
+    "question": "Benda yang digunakan untuk menulis di papan tulis adalah?",
+    "options": ["Pensil", "Spidol", "Penghapus", "Penggaris"],
+    "answer": 1
+  },
+  {
+    "question": "Apa warna langit saat cuaca cerah?",
+    "options": ["Hijau", "Biru", "Merah", "Ungu"],
+    "answer": 1
+  },
+  {
+    "question": "Hewan yang terkenal lambat adalah?",
+    "options": ["Cheetah", "Kura-kura", "Kelinci", "Kuda"],
+    "answer": 1
+  },
+  {
+    "question": "Negara asal sushi adalah?",
+    "options": ["China", "Thailand", "Jepang", "Korea"],
+    "answer": 2
+  },
+  {
+    "question": "Berapa sisi persegi?",
+    "options": ["2", "3", "4", "5"],
+    "answer": 2
+  },
+  {
+    "question": "Lawan kata 'besar' adalah?",
+    "options": ["Panjang", "Kecil", "Lebar", "Tinggi"],
+    "answer": 1
+  },
+  {
+    "question": "Tebak-tebakan: Semakin dipotong semakin panjang. Apa itu?",
+    "options": ["Rambut", "Jalan", "Tali", "Bayangan"],
+    "answer": 1
+  },
+  {
+    "question": "Berapakah hasil 50 ÷ 5?",
+    "options": ["5", "10", "15", "20"],
+    "answer": 1
+  },
+  {
+    "question": "Planet tempat manusia tinggal adalah?",
+    "options": ["Mars", "Venus", "Bumi", "Saturnus"],
+    "answer": 2
+  },
+  {
+    "question": "Minuman yang biasanya dibuat dari biji kopi adalah?",
+    "options": ["Teh", "Kopi", "Susu", "Jus"],
+    "answer": 1
+  },
+  {
+    "question": "Tebak-tebakan: Apa yang kalau dibalik tetap sama?",
+    "options": ["Kasur", "Bola", "Jam", "Meja"],
+    "answer": 0
+  },
+  {
+    "question": "Benda yang digunakan untuk melihat waktu adalah?",
+    "options": ["Kalkulator", "Jam", "Kompas", "Peta"],
+    "answer": 1
+  },
+  {
+    "question": "Berapa roda yang dimiliki sepeda pada umumnya?",
+    "options": ["1", "2", "3", "4"],
+    "answer": 1
+  },
+  {
+    "question": "Lautan terbesar di dunia adalah?",
+    "options": ["Atlantik", "Hindia", "Pasifik", "Arktik"],
+    "answer": 2
+  },
+  {
+    "question": "Tebak-tebakan: Apa yang selalu ikut ke mana pun kamu pergi, tapi tidak pernah bergerak sendiri?",
+    "options": ["Bayangan", "Sepatu", "Tas", "Topi"],
+    "answer": 0
+  },
+  {
+    "question": "Warna campuran merah dan biru adalah?",
+    "options": ["Hijau", "Ungu", "Oranye", "Pink"],
+    "answer": 1
+  },
+  {
+    "question": "Hewan yang bisa terbang adalah?",
+    "options": ["Ayam", "Burung Elang", "Kucing", "Sapi"],
+    "answer": 1
+  },
+  {
+    "question": "Berapakah hasil dari 15 + 20?",
+    "options": ["30", "35", "40", "45"],
+    "answer": 1
+  },
+  {
+    "question": "Tebak-tebakan: Apa yang punya leher tapi tidak punya kepala?",
+    "options": ["Botol", "Jerapah", "Kaos", "Sendok"],
+    "answer": 0
+  },
+  {
+    "question": "Hari setelah Jumat adalah?",
+    "options": ["Kamis", "Sabtu", "Minggu", "Senin"],
+    "answer": 1
+  },
+  {
+    "question": "Tebak-tebakan: Kota apa yang bisa diminum?",
+    "options": ["Solo", "Milo", "Paris", "Tokyo"],
+    "answer": 1
+  },
+  {
+    "question": "Buah yang memiliki banyak biji di bagian luar adalah?",
+    "options": ["Mangga", "Stroberi", "Jeruk", "Apel"],
+    "answer": 1
+  },
+  {
+    "question": "Berapa menit dalam satu jam?",
+    "options": ["30", "45", "60", "90"],
+    "answer": 2
+  },
+  {
+    "question": "Tebak-tebakan: Ikan apa yang bikin sakit perut?",
+    "options": ["Lele", "Tongkol", "Ikan Buntal", "Bandeng"],
+    "answer": 2
+  }
+]
