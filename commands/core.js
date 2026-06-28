@@ -106,7 +106,11 @@ bot.onText(/\/start/, async (msg) => {
 
 Selamat datang!
 
-Gunakan tombol di bawah untuk bermain.`,
+Gunakan tombol di bawah untuk bermain.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👨‍💻 Created by @YanTechn0
+💬 Kritik & Saran: @NamaBotFeedback`,
     {
       reply_markup: {
         inline_keyboard: [
@@ -458,9 +462,15 @@ bot.onText(/\/leave/, (msg) => {
     delete rooms[chatId];
 
     return bot.sendMessage(
-      chatId,
-      "🛑 Room dibubarkan karena tidak ada pemain."
-    );
+    chatId,
+    `🔴 Room berhasil dibubarkan.
+
+Terima kasih sudah bermain di YANTECH PARTY GAMES! 🎉
+
+━━━━━━━━━━━━━━
+👨‍💻 Created by @YanTechn0
+💬 Kritik & Saran: @NamaBotFeedback`
+);
   }
 
   bot.sendMessage(
