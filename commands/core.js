@@ -108,7 +108,7 @@ Selamat datang!
 
 Gunakan tombol di bawah untuk bermain.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━
 👨‍💻 Created by @YanTechn0
 💬 Kritik & Saran: @KritSarYanTechPartyGamesBot`,
     {
@@ -196,6 +196,8 @@ bot.onText(/\/help/, (msg) => {
 
 🏆 SCORE
 • /score — lihat leaderboard
+
+━━━━━━━━━━━━━━
 
 Kritik & Saran: @KritSarYanTechPartyGamesBot
 
