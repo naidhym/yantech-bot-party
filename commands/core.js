@@ -108,9 +108,9 @@ Selamat datang!
 
 Gunakan tombol di bawah untuk bermain.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 👨‍💻 Created by @YanTechn0
-💬 Kritik & Saran: @NamaBotFeedback`,
+💬 Kritik & Saran: @KritSarYanTechPartyGamesBot`,
     {
       reply_markup: {
         inline_keyboard: [
@@ -196,6 +196,8 @@ bot.onText(/\/help/, (msg) => {
 
 🏆 SCORE
 • /score — lihat leaderboard
+
+Kritik & Saran: @KritSarYanTechPartyGamesBot
 
 🤖 Yantech Party Games`
   );
@@ -469,7 +471,7 @@ Terima kasih sudah bermain di YANTECH PARTY GAMES! 🎉
 
 ━━━━━━━━━━━━━━
 👨‍💻 Created by @YanTechn0
-💬 Kritik & Saran: @NamaBotFeedback`
+💬 Kritik & Saran: @KritSarYanTechPartyGamesBot`
 );
   }
 

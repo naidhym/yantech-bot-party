@@ -248,5 +248,100 @@
     "question": "Tebak-tebakan: Ikan apa yang bikin sakit perut?",
     "options": ["Lele", "Tongkol", "Ikan Buntal", "Bandeng"],
     "answer": 2
+  },
+  {
+    "question": "Negara manakah yang memiliki menara Pisa?",
+    "options": ["Prancis", "Italia", "Spanyol", "Yunani"],
+    "answer": 1
+  },
+  {
+    "question": "Apa nama alat musik gesek yang biasanya dimainkan dengan busur?",
+    "options": ["Gitar", "Biola", "Piano", "Drum"],
+    "answer": 1
+  },
+  {
+    "question": "Benda apa yang dipakai untuk melihat benda jauh di langit?",
+    "options": ["Mikroskop", "Teropong", "Kacamata", "Kompas"],
+    "answer": 1
+  },
+  {
+    "question": "Hewan apa yang dikenal sebagai raja hutan?",
+    "options": ["Singa", "Harimau", "Gajah", "Macan"],
+    "answer": 0
+  },
+  {
+    "question": "Siapa penulis buku 'Harry Potter'?",
+    "options": ["J.K. Rowling", "Stephen King", "Agatha Christie", "George R.R. Martin"],
+    "answer": 0
+  },
+  {
+    "question": "Apa istilah untuk ilmu yang mempelajari benda-benda dan energi?",
+    "options": ["Biologi", "Kimia", "Fisika", "Geografi"],
+    "answer": 2
+  },
+  {
+    "question": "Tebak-tebakan: Apa yang selalu datang tapi tidak pernah tiba?",
+    "options": ["Besok", "Hari ini", "Kemarin", "Ulang tahun"],
+    "answer": 0
+  },
+  {
+    "question": "Apa nama sungai terpanjang di dunia?",
+    "options": ["Nil", "Amazon", "Mississippi", "Yangtze"],
+    "answer": 1
+  },
+  {
+    "question": "Buah apa yang biasanya merah dan kecil serta manis?",
+    "options": ["Jeruk", "Stroberi", "Apel", "Pisang"],
+    "answer": 1
+  },
+  {
+    "question": "Apa nama planet yang paling dekat dengan Matahari?",
+    "options": ["Venus", "Merkurius", "Bumi", "Mars"],
+    "answer": 1
+  },
+  {
+    "question": "Alat tulis apa yang digunakan untuk menghapus kesalahan?",
+    "options": ["Pensil", "Penghapus", "Ballpoint", "Spidol"],
+    "answer": 1
+  },
+  {
+    "question": "Apa nama bahasa yang digunakan di Brasil?",
+    "options": ["Spanyol", "Portugis", "Prancis", "Inggirs"],
+    "answer": 1
+  },
+  {
+    "question": "Tebak-tebakan: Apa yang punya kaki tetapi tidak bisa berjalan?",
+    "options": ["Meja", "Kucing", "Orang", "Kuda"],
+    "answer": 0
+  },
+  {
+    "question": "Benda apa yang menjadi simbol cinta di hari Valentine?",
+    "options": ["Bintang", "Hati", "Matahari", "Bulan"],
+    "answer": 1
+  },
+  {
+    "question": "Apa warna dasar bendera Jepang?",
+    "options": ["Putih dengan lingkaran merah", "Merah dengan garis putih", "Biru dengan bintang merah", "Hijau dengan bulan putih"],
+    "answer": 0
+  },
+  {
+    "question": "Binatang apa yang bertelur dan bisa terbang?",
+    "options": ["Kucing", "Burung", "Kelinci", "Ikan"],
+    "answer": 1
+  },
+  {
+    "question": "Tebak-tebakan: Apa yang kamu makan sebelum makan malam?",
+    "options": ["Makanan", "Dessert", "Appetizer", "Sarapan"],
+    "answer": 2
+  },
+  {
+    "question": "Berapa sisi segitiga?",
+    "options": ["2", "3", "4", "5"],
+    "answer": 1
+  },
+  {
+    "question": "Apa nama logam yang biasa ada dalam emas imitasi?",
+    "options": ["Silver", "Tembaga", "Besi", "Aluminium"],
+    "answer": 1
   }
 ]
