@@ -1,6 +1,6 @@
 const questions = require("../data/quiz.json");
 
-module.exports = (bot, rooms) => {
+module.exports = (bot, rooms, statsStore) => {
 
   const pickUnusedQuestion = (room, pool) => {
     if (!Array.isArray(pool) || pool.length === 0) {
@@ -11,24 +11,31 @@ module.exports = (bot, rooms) => {
       room.usedQuestions = {};
     }
 
+    if (!Array.isArray(room.usedQuiz)) {
+      room.usedQuiz = [];
+    }
+
     if (!Array.isArray(room.usedQuestions.quiz)) {
       room.usedQuestions.quiz = [];
     }
 
-    if (room.usedQuestions.quiz.length >= pool.length) {
+    if (room.usedQuiz.length >= pool.length) {
+      room.usedQuiz = [];
       room.usedQuestions.quiz = [];
     }
 
     const availableIndexes = pool
       .map((_, index) => index)
-      .filter((index) => !room.usedQuestions.quiz.includes(index));
+      .filter((index) => !room.usedQuiz.includes(index));
 
     if (availableIndexes.length === 0) {
+      room.usedQuiz = [];
       room.usedQuestions.quiz = [];
       return pool[Math.floor(Math.random() * pool.length)];
     }
 
     const selectedIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
+    room.usedQuiz = [...room.usedQuiz, selectedIndex];
     room.usedQuestions.quiz = [...room.usedQuestions.quiz, selectedIndex];
     return pool[selectedIndex];
   };
@@ -82,6 +89,7 @@ module.exports = (bot, rooms) => {
     }
 
     const selectedQuestion = pickUnusedQuestion(rooms[chatId], questions);
+    statsStore?.recordQuestion("quiz");
     const questionData = selectedQuestion || questions[0];
     const questionIndex = selectedQuestion ? questions.indexOf(selectedQuestion) : 0;
 

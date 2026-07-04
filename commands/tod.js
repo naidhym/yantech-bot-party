@@ -1,7 +1,7 @@
 const truths = require("../data/truth.json");
 const dares = require("../data/dare.json");
 
-module.exports = (bot, rooms) => {
+module.exports = (bot, rooms, statsStore) => {
 
   const pickUnusedQuestion = (room, pool) => {
     if (!Array.isArray(pool) || pool.length === 0) {
@@ -12,25 +12,35 @@ module.exports = (bot, rooms) => {
       room.usedQuestions = {};
     }
 
-    if (!Array.isArray(room.usedQuestions.tod)) {
-      room.usedQuestions.tod = [];
+    const stateKey = pool === truths ? "usedTruth" : "usedDare";
+    const legacyKey = pool === truths ? "truth" : "dare";
+
+    if (!Array.isArray(room[stateKey])) {
+      room[stateKey] = [];
     }
 
-    if (room.usedQuestions.tod.length >= pool.length) {
-      room.usedQuestions.tod = [];
+    if (!Array.isArray(room.usedQuestions[legacyKey])) {
+      room.usedQuestions[legacyKey] = [];
+    }
+
+    if (room[stateKey].length >= pool.length) {
+      room[stateKey] = [];
+      room.usedQuestions[legacyKey] = [];
     }
 
     const availableIndexes = pool
       .map((_, index) => index)
-      .filter((index) => !room.usedQuestions.tod.includes(index));
+      .filter((index) => !room[stateKey].includes(index));
 
     if (availableIndexes.length === 0) {
-      room.usedQuestions.tod = [];
+      room[stateKey] = [];
+      room.usedQuestions[legacyKey] = [];
       return pool[Math.floor(Math.random() * pool.length)];
     }
 
     const selectedIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
-    room.usedQuestions.tod = [...room.usedQuestions.tod, selectedIndex];
+    room[stateKey] = [...room[stateKey], selectedIndex];
+    room.usedQuestions[legacyKey] = [...room.usedQuestions[legacyKey], selectedIndex];
     return pool[selectedIndex];
   };
 
@@ -75,6 +85,7 @@ module.exports = (bot, rooms) => {
     const isTruth = Math.random() < 0.5;
     const pool = isTruth ? truths : dares;
     const question = pickUnusedQuestion(rooms[chatId], pool) || pool[0];
+    statsStore?.recordQuestion(isTruth ? "truth" : "dare");
 
     const mode = isTruth
       ? "❓ TRUTH"

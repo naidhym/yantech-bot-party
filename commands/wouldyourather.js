@@ -1,6 +1,6 @@
 const questions = require("../data/wouldyourather.json");
 
-module.exports = (bot, rooms) => {
+module.exports = (bot, rooms, statsStore) => {
 
   const pickUnusedQuestion = (room, pool) => {
     if (!Array.isArray(pool) || pool.length === 0) {
@@ -11,24 +11,31 @@ module.exports = (bot, rooms) => {
       room.usedQuestions = {};
     }
 
+    if (!Array.isArray(room.usedWYR)) {
+      room.usedWYR = [];
+    }
+
     if (!Array.isArray(room.usedQuestions.wouldyourather)) {
       room.usedQuestions.wouldyourather = [];
     }
 
-    if (room.usedQuestions.wouldyourather.length >= pool.length) {
+    if (room.usedWYR.length >= pool.length) {
+      room.usedWYR = [];
       room.usedQuestions.wouldyourather = [];
     }
 
     const availableIndexes = pool
       .map((_, index) => index)
-      .filter((index) => !room.usedQuestions.wouldyourather.includes(index));
+      .filter((index) => !room.usedWYR.includes(index));
 
     if (availableIndexes.length === 0) {
+      room.usedWYR = [];
       room.usedQuestions.wouldyourather = [];
       return pool[Math.floor(Math.random() * pool.length)];
     }
 
     const selectedIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
+    room.usedWYR = [...room.usedWYR, selectedIndex];
     room.usedQuestions.wouldyourather = [...room.usedQuestions.wouldyourather, selectedIndex];
     return pool[selectedIndex];
   };
@@ -72,6 +79,7 @@ module.exports = (bot, rooms) => {
     }
 
     const question = pickUnusedQuestion(rooms[chatId], questions) || questions[0];
+    statsStore?.recordQuestion("wouldyourather");
 
     bot.sendMessage(
       chatId,

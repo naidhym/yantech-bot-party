@@ -1,6 +1,6 @@
 const nhie = require("../data/neverhaveiever.json");
 
-module.exports = (bot, rooms) => {
+module.exports = (bot, rooms, statsStore) => {
 
   const pickUnusedQuestion = (room, pool) => {
     if (!Array.isArray(pool) || pool.length === 0) {
@@ -11,24 +11,31 @@ module.exports = (bot, rooms) => {
       room.usedQuestions = {};
     }
 
+    if (!Array.isArray(room.usedNHIE)) {
+      room.usedNHIE = [];
+    }
+
     if (!Array.isArray(room.usedQuestions.neverhaveiever)) {
       room.usedQuestions.neverhaveiever = [];
     }
 
-    if (room.usedQuestions.neverhaveiever.length >= pool.length) {
+    if (room.usedNHIE.length >= pool.length) {
+      room.usedNHIE = [];
       room.usedQuestions.neverhaveiever = [];
     }
 
     const availableIndexes = pool
       .map((_, index) => index)
-      .filter((index) => !room.usedQuestions.neverhaveiever.includes(index));
+      .filter((index) => !room.usedNHIE.includes(index));
 
     if (availableIndexes.length === 0) {
+      room.usedNHIE = [];
       room.usedQuestions.neverhaveiever = [];
       return pool[Math.floor(Math.random() * pool.length)];
     }
 
     const selectedIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
+    room.usedNHIE = [...room.usedNHIE, selectedIndex];
     room.usedQuestions.neverhaveiever = [...room.usedQuestions.neverhaveiever, selectedIndex];
     return pool[selectedIndex];
   };
@@ -65,6 +72,7 @@ module.exports = (bot, rooms) => {
     }
 
     const question = pickUnusedQuestion(rooms[chatId], nhie) || nhie[0];
+    statsStore?.recordQuestion("neverhaveiever");
 
     bot.sendMessage(
       chatId,

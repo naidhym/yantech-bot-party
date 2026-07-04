@@ -1,6 +1,154 @@
-module.exports = (bot, rooms) => {
+module.exports = (bot, rooms, statsStore) => {
 
   const getCurrentPlayer = (room) => room?.players?.[room.currentTurn] || null;
+
+  const ownerId = process.env.OWNER_ID;
+  const isOwner = (userId) => userId != null && String(ownerId) === String(userId);
+  const registerUserAndGroup = (chat, userId) => {
+    if (!statsStore) {
+      return;
+    }
+
+    if (userId != null) {
+      statsStore.ensureUser(userId);
+    }
+
+    if (chat?.type && ["group", "supergroup"].includes(chat.type)) {
+      statsStore.ensureGroup(chat.id);
+    }
+  };
+
+  const getMainMenuKeyboard = (userId) => {
+    const keyboard = [
+      [{ text: "➕ Join", callback_data: "join" }],
+      [{ text: "👥 Players", callback_data: "players" }],
+      [{ text: "🎮 Start Game", callback_data: "startmenu" }],
+      [
+        { text: "🏆 Score", callback_data: "score" },
+        { text: "ℹ️ Help", callback_data: "help" },
+      ],
+      [{ text: "🚪 Leave", callback_data: "leave_room" }],
+    ];
+
+    if (isOwner(userId)) {
+      keyboard.push([{ text: "📊 Stats", callback_data: "stats" }]);
+    }
+
+    return keyboard;
+  };
+
+  const formatUptime = () => {
+    const totalSeconds = Math.floor(process.uptime());
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    return `${days} hari ${hours} jam ${minutes} menit`;
+  };
+
+  const ensureUsedQuestionState = (room) => {
+    if (!room) {
+      return room;
+    }
+
+    if (!room.usedQuestions) {
+      room.usedQuestions = {};
+    }
+
+    if (!Array.isArray(room.usedTruth)) {
+      room.usedTruth = [];
+    }
+
+    if (!Array.isArray(room.usedDare)) {
+      room.usedDare = [];
+    }
+
+    if (!Array.isArray(room.usedNHIE)) {
+      room.usedNHIE = [];
+    }
+
+    if (!Array.isArray(room.usedWYR)) {
+      room.usedWYR = [];
+    }
+
+    if (!Array.isArray(room.usedQuiz)) {
+      room.usedQuiz = [];
+    }
+
+    return room;
+  };
+
+  const resetUsedQuestionState = (room) => {
+    ensureUsedQuestionState(room);
+    room.usedTruth = [];
+    room.usedDare = [];
+    room.usedNHIE = [];
+    room.usedWYR = [];
+    room.usedQuiz = [];
+    room.usedQuestions = {};
+    return room;
+  };
+
+  const getUsedQuestionList = (room, key, legacyKey) => {
+    ensureUsedQuestionState(room);
+
+    if (Array.isArray(room[key])) {
+      return room[key];
+    }
+
+    if (room.usedQuestions && Array.isArray(room.usedQuestions[legacyKey])) {
+      room[key] = [...room.usedQuestions[legacyKey]];
+      return room[key];
+    }
+
+    room[key] = [];
+    return room[key];
+  };
+
+  const pickUnusedQuestion = (room, mode, pool) => {
+    if (!Array.isArray(pool) || pool.length === 0) {
+      return null;
+    }
+
+    ensureUsedQuestionState(room);
+
+    const keyMap = {
+      truth: "usedTruth",
+      dare: "usedDare",
+      neverhaveiever: "usedNHIE",
+      wouldyourather: "usedWYR",
+      quiz: "usedQuiz",
+    };
+
+    const stateKey = keyMap[mode] || null;
+    const usedList = stateKey ? getUsedQuestionList(room, stateKey, mode) : [];
+
+    if (usedList.length >= pool.length) {
+      room[stateKey] = [];
+      room.usedQuestions[mode] = [];
+    }
+
+    const availableIndexes = pool
+      .map((_, index) => index)
+      .filter((index) => !room[stateKey].includes(index));
+
+    if (availableIndexes.length === 0) {
+      room[stateKey] = [];
+      room.usedQuestions[mode] = [];
+      return {
+        item: pool[Math.floor(Math.random() * pool.length)],
+        index: Math.floor(Math.random() * pool.length),
+      };
+    }
+
+    const selectedIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
+    room[stateKey] = [...room[stateKey], selectedIndex];
+    room.usedQuestions[mode] = [...room.usedQuestions[mode] || [], selectedIndex];
+
+    return {
+      item: pool[selectedIndex],
+      index: selectedIndex,
+    };
+  };
 
   const getModeLabel = (mode) => {
     switch (mode) {
@@ -28,44 +176,6 @@ module.exports = (bot, rooms) => {
       default:
         return { text: "🎲 Spin", callback: "spin" };
     }
-  };
-
-  const pickUnusedQuestion = (room, mode, pool) => {
-    if (!Array.isArray(pool) || pool.length === 0) {
-      return null;
-    }
-
-    if (!room.usedQuestions) {
-      room.usedQuestions = {};
-    }
-
-    if (!Array.isArray(room.usedQuestions[mode])) {
-      room.usedQuestions[mode] = [];
-    }
-
-    if (room.usedQuestions[mode].length >= pool.length) {
-      room.usedQuestions[mode] = [];
-    }
-
-    const availableIndexes = pool
-      .map((_, index) => index)
-      .filter((index) => !room.usedQuestions[mode].includes(index));
-
-    if (availableIndexes.length === 0) {
-      room.usedQuestions[mode] = [];
-      return {
-        item: pool[Math.floor(Math.random() * pool.length)],
-        index: Math.floor(Math.random() * pool.length),
-      };
-    }
-
-    const selectedIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
-    room.usedQuestions[mode] = [...room.usedQuestions[mode], selectedIndex];
-
-    return {
-      item: pool[selectedIndex],
-      index: selectedIndex,
-    };
   };
 
   const showEndGameOptions = (botInstance, chatId) => {
@@ -98,6 +208,7 @@ module.exports = (bot, rooms) => {
 bot.onText(/\/start/, async (msg) => {
 
   const chatId = msg.chat.id;
+  registerUserAndGroup(msg.chat, msg.from.id);
 
   // Kirim menu utama
   await bot.sendMessage(
@@ -113,42 +224,7 @@ Gunakan tombol di bawah untuk bermain.
 💬 Kritik & Saran: @KritSarYanTechPartyGamesBot`,
     {
       reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: "➕ Join",
-              callback_data: "join"
-            }
-          ],
-          [
-            {
-              text: "👥 Players",
-              callback_data: "players"
-            }
-          ],
-          [
-            {
-              text: "🎮 Start Game",
-              callback_data: "startmenu"
-            }
-          ],
-          [
-            {
-              text: "🏆 Score",
-              callback_data: "score"
-            },
-            {
-              text: "ℹ️ Help",
-              callback_data: "help"
-            }
-          ],
-          [
-            {
-              text: "🚪 Leave",
-              callback_data: "leave_room"
-            }
-          ]
-        ]
+        inline_keyboard: getMainMenuKeyboard(msg.from.id)
       }
     }
   );
@@ -211,6 +287,7 @@ Kritik & Saran: @KritSarYanTechPartyGamesBot
 
 bot.onText(/\/join/, (msg) => {
   const chatId = msg.chat.id;
+  registerUserAndGroup(msg.chat, msg.from.id);
 
   if (!rooms[chatId]) {
     rooms[chatId] = {
@@ -220,6 +297,11 @@ bot.onText(/\/join/, (msg) => {
       hostId: msg.from.id,
       gameMode: null,
       usedQuestions: {},
+      usedTruth: [],
+      usedDare: [],
+      usedNHIE: [],
+      usedWYR: [],
+      usedQuiz: [],
       currentQuiz: null,
     };
   }
@@ -327,8 +409,9 @@ Game tersedia:
   rooms[chatId].gameMode = game;
   rooms[chatId].started = true;
   rooms[chatId].currentTurn = 0;
-  rooms[chatId].usedQuestions = {};
+  resetUsedQuestionState(rooms[chatId]);
   rooms[chatId].currentQuiz = null;
+  statsStore?.recordGameStart(game);
 
   const currentPlayer =
     rooms[chatId].players[0];
@@ -412,6 +495,13 @@ bot.onText(/\/endgame/, (msg) => {
     return bot.sendMessage(
       chatId,
       "⚠️ Belum ada room."
+    );
+  }
+
+  if (msg.from.id !== rooms[chatId].hostId) {
+    return bot.sendMessage(
+      chatId,
+      "❌ Hanya host yang dapat mengakhiri permainan."
     );
   }
 
@@ -580,12 +670,15 @@ bot.on("callback_query", async (query) => {
 
   const chatId = query.message.chat.id;
   const data = query.data;
+  registerUserAndGroup(query.message?.chat, query.from.id);
 
-  try {
-    await bot.answerCallbackQuery(query.id);
-  } catch (error) {
-    console.warn("Callback query response failed:", error.message || error);
-  }
+  const answerCallback = async (text, showAlert = false) => {
+    try {
+      await bot.answerCallbackQuery(query.id, text ? { text, show_alert: showAlert } : undefined);
+    } catch (error) {
+      console.warn("Callback query response failed:", error.message || error);
+    }
+  };
 
   if (!rooms[chatId]) {
     rooms[chatId] = {
@@ -595,15 +688,33 @@ bot.on("callback_query", async (query) => {
       hostId: query.from.id,
       gameMode: null,
       usedQuestions: {},
+      usedTruth: [],
+      usedDare: [],
+      usedNHIE: [],
+      usedWYR: [],
+      usedQuiz: [],
       currentQuiz: null,
+      processedCallbacks: {},
     };
   }
+
+  const room = rooms[chatId];
+  const callbackKey = `${query.message?.message_id || 0}:${data}`;
+
+  if (room.processedCallbacks?.[callbackKey]) {
+    await answerCallback("⏳ Tombol ini sudah diproses.");
+    return;
+  }
+
+  room.processedCallbacks = room.processedCallbacks || {};
+  room.processedCallbacks[callbackKey] = true;
 
   // =========================
   // JOIN
   // =========================
 
   if (data === "join") {
+    await answerCallback();
 
     if (!rooms[chatId]) {
       rooms[chatId] = {
@@ -613,7 +724,13 @@ bot.on("callback_query", async (query) => {
         hostId: query.from.id,
         gameMode: null,
         usedQuestions: {},
+        usedTruth: [],
+        usedDare: [],
+        usedNHIE: [],
+        usedWYR: [],
+        usedQuiz: [],
         currentQuiz: null,
+        processedCallbacks: {},
       };
     }
 
@@ -645,6 +762,7 @@ bot.on("callback_query", async (query) => {
   // =========================
 
   if (data === "players") {
+    await answerCallback();
 
     if (
       !rooms[chatId] ||
@@ -671,6 +789,7 @@ bot.on("callback_query", async (query) => {
   // =========================
 
   if (data === "help") {
+    await answerCallback();
 
     return bot.sendMessage(
       chatId,
@@ -703,6 +822,7 @@ bot.on("callback_query", async (query) => {
   // =========================
 
   if (data === "score") {
+    await answerCallback();
 
     if (!rooms[chatId]) {
       return bot.sendMessage(
@@ -734,6 +854,7 @@ bot.on("callback_query", async (query) => {
   // =========================
 
   if (data === "startmenu") {
+    await answerCallback();
 
     return bot.sendMessage(
       chatId,
@@ -745,7 +866,8 @@ bot.on("callback_query", async (query) => {
             [{ text: "🍻 NHIE", callback_data: "start_nhie" }],
             [{ text: "🤔 WYR", callback_data: "start_wyr" }],
             [{ text: "🧠 Quiz", callback_data: "start_quiz" }],
-            [{ text: "🚪 Leave", callback_data: "leave_room" }]
+            [{ text: "🚪 Leave", callback_data: "leave_room" }],
+            ...(isOwner(query.from.id) ? [[{ text: "📊 Stats", callback_data: "stats" }]] : [])
           ]
         }
       }
@@ -757,6 +879,7 @@ bot.on("callback_query", async (query) => {
   // =========================
 
   if (data === "start_tod") {
+    await answerCallback();
 
     if (!rooms[chatId])
       return bot.sendMessage(chatId, "Belum ada pemain yang bergabung.");
@@ -770,8 +893,9 @@ bot.on("callback_query", async (query) => {
     rooms[chatId].gameMode = "tod";
     rooms[chatId].started = true;
     rooms[chatId].currentTurn = 0;
-    rooms[chatId].usedQuestions = {};
+    resetUsedQuestionState(rooms[chatId]);
     rooms[chatId].currentQuiz = null;
+    statsStore?.recordGameStart("tod");
 
     return bot.sendMessage(
     chatId,
@@ -801,6 +925,7 @@ bot.on("callback_query", async (query) => {
   // =========================
 
   if (data === "start_nhie") {
+    await answerCallback();
 
     if (!rooms[chatId])
       return bot.sendMessage(chatId, "Belum ada pemain yang bergabung.");
@@ -814,8 +939,9 @@ bot.on("callback_query", async (query) => {
     rooms[chatId].gameMode = "neverhaveiever";
     rooms[chatId].started = true;
     rooms[chatId].currentTurn = 0;
-    rooms[chatId].usedQuestions = {};
+    resetUsedQuestionState(rooms[chatId]);
     rooms[chatId].currentQuiz = null;
+    statsStore?.recordGameStart("neverhaveiever");
 
     return bot.sendMessage(
     chatId,
@@ -845,6 +971,7 @@ bot.on("callback_query", async (query) => {
   // =========================
 
   if (data === "start_wyr") {
+    await answerCallback();
 
     if (!rooms[chatId])
       return bot.sendMessage(chatId, "Belum ada pemain yang bergabung.");
@@ -858,8 +985,9 @@ bot.on("callback_query", async (query) => {
     rooms[chatId].gameMode = "wouldyourather";
 rooms[chatId].started = true;
 rooms[chatId].currentTurn = 0;
-rooms[chatId].usedQuestions = {};
+resetUsedQuestionState(rooms[chatId]);
 rooms[chatId].currentQuiz = null;
+statsStore?.recordGameStart("wouldyourather");
 
 return bot.sendMessage(
   chatId,
@@ -895,6 +1023,7 @@ ${rooms[chatId].players[0].name}`,
   // =========================
 
   if (data === "start_quiz") {
+    await answerCallback();
 
   if (!rooms[chatId])
     return bot.sendMessage(chatId, "Belum ada pemain yang bergabung.");
@@ -908,8 +1037,9 @@ ${rooms[chatId].players[0].name}`,
   rooms[chatId].gameMode = "quiz";
   rooms[chatId].started = true;
   rooms[chatId].currentTurn = 0;
-  rooms[chatId].usedQuestions = {};
+  resetUsedQuestionState(rooms[chatId]);
   rooms[chatId].currentQuiz = null;
+  statsStore?.recordGameStart("quiz");
 
   return bot.sendMessage(
     chatId,
@@ -945,6 +1075,7 @@ ${rooms[chatId].players[0].name}`,
 // =========================
 
 if (data === "spin") {
+  await answerCallback();
 
   const currentPlayer = getCurrentPlayer(rooms[chatId]);
 
@@ -968,8 +1099,9 @@ if (data === "spin") {
 
   const isTruth = Math.random() < 0.5;
   const pool = isTruth ? truths : dares;
-  const selectedQuestion = pickUnusedQuestion(rooms[chatId], "tod", pool);
+  const selectedQuestion = pickUnusedQuestion(rooms[chatId], isTruth ? "truth" : "dare", pool);
   const question = selectedQuestion?.item || (isTruth ? truths[0] : dares[0]);
+  statsStore?.recordQuestion(isTruth ? "truth" : "dare");
 
   const mode = isTruth
     ? "❓ TRUTH"
@@ -1011,6 +1143,7 @@ ${question}`,
 // =========================
 
 if (data === "nhie") {
+  await answerCallback();
 
   const currentPlayer = getCurrentPlayer(rooms[chatId]);
 
@@ -1041,6 +1174,7 @@ if (data === "nhie") {
 
   const selectedQuestion = pickUnusedQuestion(rooms[chatId], "neverhaveiever", nhie);
   const question = selectedQuestion?.item || nhie[0];
+  statsStore?.recordQuestion("neverhaveiever");
 
   return bot.sendMessage(
     chatId,
@@ -1076,6 +1210,7 @@ ${question}`,
 // =========================
 
 if (data === "wyr") {
+  await answerCallback();
 
   const currentPlayer = getCurrentPlayer(rooms[chatId]);
 
@@ -1099,6 +1234,7 @@ if (data === "wyr") {
 
   const selectedQuestion = pickUnusedQuestion(rooms[chatId], "wouldyourather", wyr);
   const question = selectedQuestion?.item || wyr[0];
+  statsStore?.recordQuestion("wouldyourather");
 
   return bot.sendMessage(
     chatId,
@@ -1139,6 +1275,7 @@ ${question}
 // =========================
 
 if (data === "quiz") {
+  await answerCallback();
 
   const currentPlayer = getCurrentPlayer(rooms[chatId]);
 
@@ -1185,6 +1322,7 @@ if (data === "quiz") {
     index: questionIndex,
     correctIndex: questionData.answer
   };
+  statsStore?.recordQuestion("quiz");
 
   return bot.sendMessage(
     chatId,
@@ -1221,6 +1359,7 @@ Pilih jawaban:`,
 }
 
 if (data.startsWith("quiz_answer_")) {
+  await answerCallback();
 
   if (!rooms[chatId] || !rooms[chatId].started) {
     return bot.sendMessage(chatId, "Game belum dimulai.");
@@ -1297,6 +1436,7 @@ ${questionData.options[questionData.answer]}`,
 // =========================
 
 if (data === "next") {
+  await answerCallback();
 
   const currentPlayer = getCurrentPlayer(rooms[chatId]);
 
@@ -1374,10 +1514,16 @@ if (data === "next") {
 if (data === "endgame") {
 
   if (!rooms[chatId]) {
+    await answerCallback();
     return bot.sendMessage(
       chatId,
       "⚠️ Belum ada room."
     );
+  }
+
+  if (query.from.id !== rooms[chatId].hostId) {
+    await answerCallback("❌ Hanya host yang dapat mengakhiri permainan.", true);
+    return;
   }
 
   rooms[chatId].started = false;
@@ -1388,12 +1534,39 @@ if (data === "endgame") {
   return showEndGameOptions(bot, chatId);
 }
 
+if (data === "stats") {
+  await answerCallback();
+
+  const stats = statsStore?.get?.() || { users: [], groups: [], totalGames: 0, gameModes: {}, totalTruth: 0, totalDare: 0, totalNeverHaveIEver: 0, totalWouldYouRather: 0, totalQuiz: 0 };
+  const gameModes = stats.gameModes || {};
+
+  return bot.sendMessage(
+    chatId,
+    `📊 YANTECH PARTY GAMES STATS
+
+👤 Total Users : ${stats.users.length}
+👥 Total Groups : ${stats.groups.length}
+🎮 Total Games : ${stats.totalGames}
+
+Mode dimainkan
+🎲 Truth or Dare : ${Number(gameModes.truthdare || 0)}
+🙅 Never Have I Ever : ${Number(gameModes.neverhaveiever || 0)}
+🤔 Would You Rather : ${Number(gameModes.wouldyourather || 0)}
+🧠 Quiz : ${Number(gameModes.quiz || 0)}
+
+Bot Uptime:
+${formatUptime()}`
+  );
+}
+
 if (data === "dismiss_room") {
+  await answerCallback();
   delete rooms[chatId];
   return bot.sendMessage(chatId, "🗑 Room berhasil dibubarkan.");
 }
 
 if (data === "leave_room") {
+  await answerCallback();
   if (!rooms[chatId]) {
     return bot.sendMessage(chatId, "⚠️ Belum ada room yang aktif.");
   }
