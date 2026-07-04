@@ -1,10 +1,12 @@
+const path = require("path");
+
 module.exports = (bot, rooms, statsStore) => {
 
   const getCurrentPlayer = (room) => room?.players?.[room.currentTurn] || null;
 
   const getOwnerId = () => {
     try {
-      require("dotenv").config();
+      require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
     } catch (error) {
       // ignore
     }
