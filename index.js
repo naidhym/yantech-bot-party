@@ -139,10 +139,10 @@ const statsStore = {
 
 require("./commands/core")(bot, rooms, statsStore);
 
-require("./commands/tod")(bot, rooms);
-require("./commands/neverhaveiever")(bot, rooms);
-require("./commands/wouldyourather")(bot, rooms);
-require("./commands/quiz")(bot, rooms);
+require("./commands/tod")(bot, rooms, statsStore);
+require("./commands/neverhaveiever")(bot, rooms, statsStore);
+require("./commands/wouldyourather")(bot, rooms, statsStore);
+require("./commands/quiz")(bot, rooms, statsStore);
 
 console.log("🤖 Bot aktif...");
 setInterval(() => {}, 1000);

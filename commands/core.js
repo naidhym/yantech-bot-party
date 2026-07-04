@@ -2,8 +2,20 @@ module.exports = (bot, rooms, statsStore) => {
 
   const getCurrentPlayer = (room) => room?.players?.[room.currentTurn] || null;
 
-  const ownerId = process.env.OWNER_ID;
-  const isOwner = (userId) => userId != null && String(ownerId) === String(userId);
+  const getOwnerId = () => {
+    try {
+      require("dotenv").config();
+    } catch (error) {
+      // ignore
+    }
+
+    return (process.env.OWNER_ID || "").toString().trim();
+  };
+
+  const isOwner = (userId) => {
+    const ownerId = getOwnerId();
+    return userId != null && ownerId !== "" && String(ownerId) === String(userId);
+  };
   const registerUserAndGroup = (chat, userId) => {
     if (!statsStore) {
       return;
@@ -234,6 +246,35 @@ Gunakan tombol di bawah untuk bermain.
   // =============================================
 // HELP COMMAND
 // =============================================
+
+bot.onText(/\/stats/, (msg) => {
+  const chatId = msg.chat.id;
+
+  if (!isOwner(msg.from.id)) {
+    return bot.sendMessage(chatId, "⚠️ Hanya owner yang dapat melihat statistik bot.");
+  }
+
+  const stats = statsStore?.get?.() || { users: [], groups: [], totalGames: 0, gameModes: {}, totalTruth: 0, totalDare: 0, totalNeverHaveIEver: 0, totalWouldYouRather: 0, totalQuiz: 0 };
+  const gameModes = stats.gameModes || {};
+
+  return bot.sendMessage(
+    chatId,
+    `📊 YANTECH PARTY GAMES STATS
+
+👤 Total Users : ${stats.users.length}
+👥 Total Groups : ${stats.groups.length}
+🎮 Total Games : ${stats.totalGames}
+
+Mode dimainkan
+🎲 Truth or Dare : ${Number(gameModes.truthdare || 0)}
+🙅 Never Have I Ever : ${Number(gameModes.neverhaveiever || 0)}
+🤔 Would You Rather : ${Number(gameModes.wouldyourather || 0)}
+🧠 Quiz : ${Number(gameModes.quiz || 0)}
+
+Bot Uptime:
+${formatUptime()}`
+  );
+});
 
 bot.onText(/\/help/, (msg) => {
   bot.sendMessage(
@@ -1536,6 +1577,10 @@ if (data === "endgame") {
 
 if (data === "stats") {
   await answerCallback();
+
+  if (!isOwner(query.from.id)) {
+    return bot.sendMessage(chatId, "⚠️ Hanya owner yang dapat melihat statistik bot.");
+  }
 
   const stats = statsStore?.get?.() || { users: [], groups: [], totalGames: 0, gameModes: {}, totalTruth: 0, totalDare: 0, totalNeverHaveIEver: 0, totalWouldYouRather: 0, totalQuiz: 0 };
   const gameModes = stats.gameModes || {};
