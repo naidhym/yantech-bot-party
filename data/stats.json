@@ -1,0 +1,21 @@
+{
+  "users": [
+    "8342344249",
+    "6075133372"
+  ],
+  "groups": [
+    "-5329552794"
+  ],
+  "totalGames": 3,
+  "totalTruth": 0,
+  "totalDare": 0,
+  "totalNeverHaveIEver": 0,
+  "totalWouldYouRather": 2,
+  "totalQuiz": 3,
+  "gameModes": {
+    "truthdare": 0,
+    "neverhaveiever": 0,
+    "wouldyourather": 1,
+    "quiz": 2
+  }
+}

@@ -8,6 +8,30 @@ const bot = new TelegramBot(process.env.BOT_TOKEN, {
   polling: true,
 });
 
+// =============================================
+// GLOBAL CRASH PROTECTION
+// =============================================
+// A single bad callback/command should never take the whole bot down.
+// These are a safety net on top of the try/catch blocks already inside
+// each command handler (in case something outside them ever throws).
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled promise rejection:", reason);
+});
+
+process.on("uncaughtException", (error) => {
+  console.error("Uncaught exception:", error);
+});
+
+// Telegram/network hiccups during polling should be logged, not crash
+// the process or silently stop the bot from receiving updates.
+bot.on("polling_error", (error) => {
+  console.error("Polling error:", error.message || error);
+});
+
+bot.on("webhook_error", (error) => {
+  console.error("Webhook error:", error.message || error);
+});
+
 const rooms = {};
 const statsFilePath = path.join(__dirname, "data", "stats.json");
 
